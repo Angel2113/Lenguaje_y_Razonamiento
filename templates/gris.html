@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>PT Gris</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="{% static "vendor/font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "css/landing-page.css" %}" rel="stylesheet">
+
+    <!-- Jquery UI CSS -->
+    <link rel="stylesheet" href="{% static "jqueryui/jquery-ui.css" %}">
+</head>
+<body>
+
+<!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Lenguaje y Razonamiento</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="intro-header">
+      <div class="container">
+        <div class="intro-message">
+          <h1>Lenguaje y Razonamiento</h1>
+          <hr class="intro-divider">
+            <br>
+        </div>
+      </div>
+    </header>
+
+<!-- Page Content -->
+    <section class="content-section-a">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 ml-auto">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Busqueda</h2>
+              <div class="form-control">
+                  {{ form.errors }}
+                  {{ form.non_field_errors }}
+                  <form class="" action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" id="btn-busqueda" type="button" name="button">Buscar</button>
+                  </form>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section-b">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 ml-auto">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Historial</h2>
+              <div class="form-control">
+                  <table class="table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <td>Busqueda:</td>
+                            <td>Fecha:</td>
+                            <td>Cantidad</td>
+                        </tr>
+                    </thead>
+                      <tbody>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>19S</td>
+                            <td>12-12-12</td>
+                            <td>500</td>
+                        </tr>
+                      <tr>
+                            <td><input type="checkbox"></td>
+                            <td>19S</td>
+                            <td>12-12-12</td>
+                            <td>500</td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        </div>
+          <br>
+        <div class="row">
+            <div class="col-md-3">
+                <button class="btn btn-primary" id="btn-modal">Descargar</button>
+            </div>
+            <div class="col-md-6"></div>
+            <div class="col-md-3">
+                <button class="btn btn-primary">Utilizar</button>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section-a">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 ml-auto">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Tipo de grafica</h2>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section-b">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 ml-auto">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Grafica</h2>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- Footer -->
+    <footer>
+      <div class="container">
+        <p class="copyright text-muted small">UAM? </p>
+      </div>
+    </footer>
+
+    <!-- Modal de descarga -->
+    <div class="modal" tabindex="-1" role="dialog" id="descarga">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Descargar</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <input type="checkbox">Fecha
+              <input type="checkbox">Texto
+              <input type="checkbox">Usuario
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">JSON</button>
+            <button type="button" class="btn btn-primary">CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static "js//jquery.min.js" %}"></script>
+
+    <script src="{% static "vendor/bootstrap/js/bootstrap.bundle.min.js"%}"></script>
+
+    <!-- Jquery UI-->
+    <script src="{% static "jqueryui/jquery-ui.js" %}"></script>
+
+    <script>
+        $( function() {
+            $( "#id_fecha_inicio" ).datepicker();
+            $( "#id_fecha_fin" ).datepicker();
+        } );
+
+        $('#btn-modal').click(function () {
+            $("#descarga").modal('show');
+        });
+
+        $('#btn-busqueda').click(function () {
+            var busqueda = $('#id_busqueda').val();
+            var cantidad = $('#id_cantidad').val();
+            var tipo = $('#id_tipo').val();
+            var fecha_inicio = $('#id_fecha_inicio').val();
+            var fecha_fin = $('#id_fecha_fin').val();
+            $.ajax({
+                type: 'POST',
+                url: '/busqueda/',
+                dataType: 'JSON',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    busqueda: busqueda,
+                    cantidad:cantidad,
+                    tipo:tipo,
+                    fecha_fin:fecha_fin,
+                    fecha_inicio: fecha_inicio
+                },
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                },
+                error: function () {
+                    console.log('Error en la busqueda');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
+
+
