@@ -24,5 +24,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^gris/$', Home.as_view(), name='home'),
-    url(r'^busqueda/$', busqueda, name='busqueda')
+    url(r'^busqueda/$', busqueda, name='busqueda'),
+    url(r'^gris/busquedas/$', get_busquedas, name='get_busquedas'),
+    url(r'^gris/down_csv/$', get_csv, name='get_busquedas'),
+    url(r'^gris/down_json/$', get_json, name='get_busquedas'),
 ]

@@ -66,6 +66,7 @@ class TweetManager:
 				tweet.geo = geo
 				tweet.urls = ",".join(urls)
 				tweet.author_id = user_id
+				print(tweet)
 
 				results.append(tweet)
 				resultsAux.append(tweet)

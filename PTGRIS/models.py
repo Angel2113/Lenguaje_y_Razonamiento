@@ -21,6 +21,7 @@ class Tweet(models.Model):
         return self.text
 
 class Busqueda(models.Model):
+    folio = models.AutoField(primary_key=True)
     busqueda = models.CharField(max_length=50)
     fecha = models.DateTimeField(auto_now_add=True, auto_now=False)
     cantidad = models.IntegerField()

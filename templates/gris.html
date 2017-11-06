@@ -18,6 +18,19 @@
 
     <!-- Jquery UI CSS -->
     <link rel="stylesheet" href="{% static "jqueryui/jquery-ui.css" %}">
+
+    <style>
+    .loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('{% static "img/6.gif" %}') 50% 50%   no-repeat rgb(249,249,249);
+    }
+    </style>
+
 </head>
 <body>
 
@@ -72,6 +85,7 @@
                     <button class="btn btn-primary" id="btn-busqueda" type="button" name="button">Buscar</button>
                   </form>
               </div>
+              <div id="loader" class="loader" style="display:none;"></div>
           </div>
         </div>
       </div>
@@ -90,23 +104,10 @@
                         <tr>
                             <td></td>
                             <td>Busqueda:</td>
-                            <td>Fecha:</td>
                             <td>Cantidad</td>
                         </tr>
                     </thead>
-                      <tbody>
-                        <tr>
-                            <td><input type="checkbox"></td>
-                            <td>19S</td>
-                            <td>12-12-12</td>
-                            <td>500</td>
-                        </tr>
-                      <tr>
-                            <td><input type="checkbox"></td>
-                            <td>19S</td>
-                            <td>12-12-12</td>
-                            <td>500</td>
-                        </tr>
+                      <tbody id="busquedas">
                       </tbody>
                   </table>
               </div>
@@ -174,8 +175,8 @@
               <input type="checkbox">Usuario
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">JSON</button>
-            <button type="button" class="btn btn-primary">CSV</button>
+            <button type="button" class="btn btn-primary" id="descarga_json">JSON</button>
+            <button type="button" class="btn btn-primary" id="descarga_csv">CSV</button>
           </div>
         </div>
       </div>
@@ -202,7 +203,7 @@
         $('#btn-busqueda').click(function () {
             var busqueda = $('#id_busqueda').val();
             var cantidad = $('#id_cantidad').val();
-            var tipo = $('#id_tipo').val();
+            var tipo = $('input[name=tipo]:checked').val();
             var fecha_inicio = $('#id_fecha_inicio').val();
             var fecha_fin = $('#id_fecha_fin').val();
             $.ajax({
@@ -217,8 +218,13 @@
                     fecha_fin:fecha_fin,
                     fecha_inicio: fecha_inicio
                 },
+                beforeSend: function(){
+                    $('#loader').show();
+                },
                 success: function (data) {
                     console.log(JSON.stringify(data));
+                    $('#loader').hide();
+                    load_busquedas();
                 },
                 error: function () {
                     console.log('Error en la busqueda');
@@ -226,6 +232,102 @@
             });
         });
 
+    </script>
+
+    <script>
+         // Carga las busquedas realizadas
+         function load_busquedas() {
+            $.ajax({
+                type: 'POST',
+                url: '/gris/busquedas/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                complete: function (data) {
+                    var result = JSON.parse(data.responseText);
+                    console.log(data.responseText);
+                    console.log(result.resultado)
+                    if(result != null){
+                        $('#busquedas').empty();
+                        for(i=0; i< result.resultado.length; i++){
+                            var b = result.resultado[i];
+                            var fila = document.createElement('tr');
+                            var input = document.createElement('input');
+                            input.type = 'radio';
+                            input.value = b['folio'];
+                            input.name = 'descarga';
+                            var td0 = document.createElement('td');
+                            td0.appendChild(input);
+                            var td1 = document.createElement('td');
+                            td1.innerHTML = b['busqueda'];
+                            //var td2 = document.createElement('td');
+                            //td2.innerHTML = b['fecha'];
+                            var td3 = document.createElement('td');
+                            td3.innerHTML = b['cantidad'];
+                            fila.append(td0);
+                            fila.append(td1);
+                            //fila.append(td2);
+                            fila.append(td3);
+                            $('#busquedas').append(fila);
+                        }
+                    }
+                },
+                error: function(){
+                    console.log('No trajo las busquedas');
+                }
+            });
+        }
+
+        // Al cargar el sitio
+        $(document).ready(function () {
+            load_busquedas();
+        });
+
+         // Al descargar csv
+        $('#descarga_csv').click(function () {
+            var folio = $('input[name="descarga"]:checked').val();
+            $.ajax({
+                type: 'POST',
+                url: '/gris/down_csv/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                complete: function (data) {
+
+                },
+                error: function(){
+                    console.log('No trajo las busquedas');
+                }
+            });
+
+        });
+
+        // Al descargar json
+        $('#descarga_json').click(function () {
+
+            var folio = $('input[name="descarga"]:checked').val();
+            $.ajax({
+                type: 'POST',
+                url: '/gris/down_json/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                complete: function (data) {
+                    var result = JSON.parse(data.responseText);
+                    console.log(data.responseText);
+                    console.log(result.resultado)
+
+                },
+                error: function(){
+                    console.log('No trajo las busquedas');
+                }
+            });
+
+
+        });
     </script>
 </body>
 </html>

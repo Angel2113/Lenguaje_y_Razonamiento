@@ -25,16 +25,19 @@ def busqueda(request):
         fecha_fin = request.POST.get('fecha_fin')
         cantidad_elegida  = 1000 if int(cantidad) > 1000 else int(cantidad)
 
-
         # Parseo de las cadenas
         for b in texto.split(' '):
             obj = guarda_busqueda(b, cantidad_elegida, tipo, fecha_inicio, fecha_fin)
-            if b.startswith('#'):
-                print('Es un hash', b)
-            elif b.startswith('@'):
+            if b.startswith('@'):
                 print('Es un usuario', b)
+                down_user(b, obj, cantidad_elegida)
             else:
-                print('ninguno de los 2', b)
+                print('Es una consulta', b)
+                print(tipo)
+                if(tipo == 'presente'):
+                    down_api_tweets()
+                if(tipo == 'pasado'):
+                    down_all_tweets(b, obj, cantidad_elegida)
 
         return JsonResponse({'texto': texto})
 
@@ -47,72 +50,68 @@ def guarda_busqueda(busqueda, cantidad, tipo, fecha_inicio=None, fecha_fin=None)
     obj.save()
     return obj
 
-def search(refeencia):
+def down_user(busqueda, obj, cantidad):
+    r = get_by_username(busqueda, cantidad)
+    for tweet in r:
+        new_insert = Tweet(
+            busqueda=obj,
+            ide=tweet.id,
+            permalink=tweet.permalink,
+            username=tweet.username,
+            text=tweet.text,
+            date=tweet.date,
+            formatted_date=tweet.formatted_date,
+            retweets=tweet.retweets,
+            favorites=tweet.favorites,
+            mentions=tweet.mentions,
+            hashtags=tweet.hashtags,
+            geo=tweet.geo,
+            urls=tweet.urls,
+            author_id=tweet.author_id
+        )
+        new_insert.save()
+
+def down_all_tweets(busqueda, obj, cantidad):
+    r = get_by_query(busqueda, cantidad)
+    for tweet in r:
+        new_insert = Tweet(
+            busqueda=obj,
+            ide=tweet.id,
+            permalink=tweet.permalink,
+            username=tweet.username,
+            text=tweet.text,
+            date=tweet.date,
+            formatted_date=tweet.formatted_date,
+            retweets=tweet.retweets,
+            favorites=tweet.favorites,
+            mentions=tweet.mentions,
+            hashtags=tweet.hashtags,
+            geo=tweet.geo,
+            urls=tweet.urls,
+            author_id=tweet.author_id
+        )
+        new_insert.save()
+
+def down_api_tweets(referencia):
     pass
 
-'''
-        # Busca los datos y los guarda en la base de datos
-        if tipo == 'sinAPI':
-            if tipo == 'User':
-                r = get_by_username(busqueda, cantidad)
-                for tweet in r:
-                    new_insert = Tweet(
-                        busqueda=obj,
-                        ide=tweet.id,
-                        permalink=tweet.permalink,
-                        username=tweet.username,
-                        text=tweet.text,
-                        date=tweet.date,
-                        formatted_date=tweet.formatted_date,
-                        retweets=tweet.retweets,
-                        favorites=tweet.favorites,
-                        mentions=tweet.mentions,
-                        hashtags=tweet.hashtags,
-                        geo=tweet.geo,
-                        urls=tweet.urls,
-                        author_id=tweet.author_id
-                    )
-                    new_insert.save()
-            elif tipo == 'Query':
-                r = get_by_query(busqueda, cantidad)
-                for tweet in r:
-                    new_insert = Tweet(
-                        busqueda=obj,
-                        ide=tweet.id,
-                        permalink=tweet.permalink,
-                        username=tweet.username,
-                        text=tweet.text,
-                        date=tweet.date,
-                        formatted_date=tweet.formatted_date,
-                        retweets=tweet.retweets,
-                        favorites=tweet.favorites,
-                        mentions=tweet.mentions,
-                        hashtags=tweet.hashtags,
-                        geo=tweet.geo,
-                        urls=tweet.urls,
-                        author_id=tweet.author_id
-                    )
-                    new_insert.save()
-        elif llaves == 'conAPI':
-            if tipo == 'User':
-                r = user_tweets(busqueda)
-                s = r[0]
-                json_str = json.dumps(s._json)
-                print(json_str)
-                for tweet in r:
-                    new_insert = Tweet(
-                        busqueda=obj,
-                        ide=tweet.id,
-                        username=tweet.user.screen_name,
-                        text=tweet.text
-                    )
-                    new_insert.save()
-
-            elif tipo == 'Query':
-                pass
-'''
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse
 
 
-    #text = request.GET.get('comment', None)
-    #historia = request.GET.get('historia', None)
-    #r = get_Babi(text, historia)
+# Obtiene las busquedas
+def get_busquedas(request):
+    objects = Busqueda.objects.all().values('folio', 'busqueda', 'cantidad')
+    #return JsonResponse(list(objects), safe=False)
+    return HttpResponse(json.dumps({'resultado':list(objects)}))
+
+# descarga como json
+def get_json(request):
+    pass
+# descarga como csv
+def get_csv(request):
+    pass
+
+
+
