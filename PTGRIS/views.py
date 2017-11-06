@@ -7,6 +7,8 @@ from .forms import SeForm
 from .models import Busqueda, Tweet
 from .sinAPI import *
 from .conAPI import *
+import json
+import csv
 
 class Home(View):
     def get(self, request, *args, **kwargs):
@@ -95,10 +97,8 @@ def down_all_tweets(busqueda, obj, cantidad):
 def down_api_tweets(referencia):
     pass
 
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse
 
+#### despliegue de datos
 
 # Obtiene las busquedas
 def get_busquedas(request):
@@ -106,12 +106,38 @@ def get_busquedas(request):
     #return JsonResponse(list(objects), safe=False)
     return HttpResponse(json.dumps({'resultado':list(objects)}))
 
+
+## descargar los datos
+
 # descarga como json
 def get_json(request):
-    pass
+    folio = request.POST.get('folio')
+    b = Busqueda(folio=folio)
+    tweets = Tweet.objects.all().filter(busqueda=b)
+
+    return HttpResponse(json.dumps({'resultado': 'buscando json'}))
+
 # descarga como csv
 def get_csv(request):
-    pass
+    folio = request.POST.get('folio')
+    b  = Busqueda(folio=folio)
+
+    # Escribe la cabecera del csv
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tweets.csv"'
+    response['Content-Type'] = 'application/x-download'
+
+    writer = csv.writer(response)
+    writer.writerow(['ide', 'permalink', 'username', 'text', 'hashtags', 'geo', 'urls', 'author_id'])
+
+
+    for e in Tweet.objects.all().filter(busqueda=b).values():
+        try:
+            writer.writerow([e['ide'], e['permalink'], e['username'], e['text'], e['hashtags'], e['geo'], e['urls'], e['author_id']])
+        except:
+            pass
+
+    return response
 
 
 

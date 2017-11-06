@@ -246,8 +246,6 @@
                 dataType: 'json',
                 complete: function (data) {
                     var result = JSON.parse(data.responseText);
-                    console.log(data.responseText);
-                    console.log(result.resultado)
                     if(result != null){
                         $('#busquedas').empty();
                         for(i=0; i< result.resultado.length; i++){
@@ -287,21 +285,30 @@
          // Al descargar csv
         $('#descarga_csv').click(function () {
             var folio = $('input[name="descarga"]:checked').val();
+            var url = '/gris/down_csv/';
+            var form = $("<form action='" + url + "' method='post'>" +
+                      "<input type='text' name='folio' value='" + folio + "' />" +
+                      "{% csrf_token %}"+
+                      "</form>");
+            $('body').append(form);
+            form.submit();
+/*
             $.ajax({
                 type: 'POST',
                 url: '/gris/down_csv/',
                 data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    folio:folio
                 },
                 dataType: 'json',
                 complete: function (data) {
 
                 },
                 error: function(){
-                    console.log('No trajo las busquedas');
+                    console.log('No descargo el csv');
                 }
             });
-
+*/
         });
 
         // Al descargar json
@@ -312,7 +319,8 @@
                 type: 'POST',
                 url: '/gris/down_json/',
                 data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    folio:folio
                 },
                 dataType: 'json',
                 complete: function (data) {
@@ -322,7 +330,7 @@
 
                 },
                 error: function(){
-                    console.log('No trajo las busquedas');
+                    console.log('No descargo el json');
                 }
             });
 
