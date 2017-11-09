@@ -28,6 +28,8 @@ def busqueda(request):
         cantidad_elegida  = 1000 if int(cantidad) > 1000 else int(cantidad)
 
         # Parseo de las cadenas
+
+        ## Guion bajo o buscar un nombre de usuario
         for b in texto.split(' '):
             obj = guarda_busqueda(b, cantidad_elegida, tipo, fecha_inicio, fecha_fin)
             if b.startswith('@'):
@@ -113,9 +115,14 @@ def get_busquedas(request):
 def get_json(request):
     folio = request.POST.get('folio')
     b = Busqueda(folio=folio)
-    tweets = Tweet.objects.all().filter(busqueda=b)
 
-    return HttpResponse(json.dumps({'resultado': 'buscando json'}))
+    response = HttpResponse(content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="json.txt"'
+    #dictionaries = [obj.as_dict() for obj in Tweet.objects.all().filter(busqueda=b).values()]
+    for d in Tweet.objects.all().filter(busqueda=b).values():
+        response.write(d)
+
+    return response
 
 # descarga como csv
 def get_csv(request):
