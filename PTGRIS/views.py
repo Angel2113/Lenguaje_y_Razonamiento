@@ -117,11 +117,13 @@ def get_json(request):
     b = Busqueda(folio=folio)
 
     response = HttpResponse(content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename="json.txt"'
+    response['Content-Disposition'] = 'attachment; filename="salida.json"'
     #dictionaries = [obj.as_dict() for obj in Tweet.objects.all().filter(busqueda=b).values()]
+    output = []
     for d in Tweet.objects.all().filter(busqueda=b).values():
-        response.write(d)
-
+        #response.write(d)
+        output.append(d)
+    response.write(json.dumps(output))
     return response
 
 # descarga como csv

@@ -133,7 +133,21 @@
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
             <h2 class="section-heading">Tipo de grafica</h2>
-
+              <div class="form-group">
+                  <label for="tipo">K-means</label>
+                  <input type="radio" name="tipo" value="kmeans">
+              </div>
+              <div class="form-group">
+                  <label for="k_groups">Grupos</label>
+                  <input class="form-control" name="k_groups" id="k_groups" type="number" min="2" value="2">
+              </div>
+              <div class="form-group">
+                  <label for="k_iter">Iteraciones</label>
+                  <input class="form-control" name="k_iter" id="k_iter" type="number" min="2" value="2">
+              </div>
+              <div class="form-group">
+                  <button class="btn btn-principal" id="gen_graphic">Generar</button>
+              </div>
           </div>
         </div>
       </div>
@@ -305,6 +319,7 @@
             $('body').append(form);
             form.submit();
         });
+
     </script>
 </body>
 </html>

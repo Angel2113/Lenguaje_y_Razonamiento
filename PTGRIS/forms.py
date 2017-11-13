@@ -3,7 +3,7 @@ from django.contrib.admin.widgets import AdminDateWidget
 
 class SeForm(forms.Form):
     CHOICES_TYPE = (('presente', 'Presente'), ('pasado', 'Pasado'))
-    CHOICES_CANTIDAD = ((100, '100'), (500, '500'), (1000, '1000'))
+    CHOICES_CANTIDAD = ((100, '100'), (500, '500'), (1000, '1000'), (5000, '5000'))
     busqueda =  forms.CharField(label="Busqueda*", widget=forms.TextInput(attrs={'placeholder':'Busqueda', 'class':'from-control'}))
     tipo =  forms.ChoiceField(label="Tipo*", widget=forms.RadioSelect, choices=CHOICES_TYPE)
     cantidad = forms.ChoiceField(label="Cantidad*", choices=CHOICES_CANTIDAD)
